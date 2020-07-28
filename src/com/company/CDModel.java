@@ -1,7 +1,17 @@
 package com.company;
 
-public class Book {
-    public Book(int id, String title, String author, String section, int x, int y, int barcode, String description, boolean onLoan)
+public class CDModel {
+
+    public CDModel(
+            int id,
+            String title,
+            String author,
+            String section,
+            int x,
+            int y,
+            int barcode,
+            String description,
+            boolean onLoan)
     {
         this.id = id;
         this.title = title;

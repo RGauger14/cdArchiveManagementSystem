@@ -1,11 +1,9 @@
 package UI;
 
+import com.company.CDModel;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.print.Book;
-import java.io.*;
-import java.nio.Buffer;
-import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
 public class MainUI {
@@ -50,63 +48,23 @@ public class MainUI {
     private JButton saveUpdateButton;
 
 
-    public MainUI() {
-        createTable(); }
+    public MainUI(ArrayList<CDModel> cds)
+    {
+        createTable();
+    }
 
-    public JPanel getRootPanel() {
+    public JPanel getRootPanel()
+    {
         return RootPanel;
     }
 
-    private void createTable() {
+    private void createTable()
+    {
         ShowTable.setModel(new DefaultTableModel(
                 null,
                 new String[]{"Title", "Author", "Section", "X", "Y", "Barcode", "Description", "OnLoan"}
         ));
     }
-    public static class ReadFile
-    {
-        public void main(String[] args) throws Exception
-        {
-            File file = new File("C:\\Users\\Gauge\\Desktop\\Semster 2\\Java2_Mark\\Student\\Assessment\\Sample_CD_Archive_Data");
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String st;
-            while ((st = br.readLine()) !=null)
-            {
-                String[] data = st.split(";");
-                Book book = createBook(data);
-                System.out.print(st);
-            }
-        }
 
-        private static ArrayList<Book> getBooksFromFile(String filePath) throws Exception
-        {
-            File file = new File("C:\\Users\\Gauge\\Desktop\\Semster 2\\Java2_Mark\\Student\\Assessment\\Sample_CD_Archive_Data");
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String st;
-            while ((st = br.readLine()) !=null)
-            {
-                String[] data = st.split(";");
-                Book book = createBook(data);
-                System.out.print(st);
-            }
-        }
-
-        private static Book createBook(String[] data)
-        {
-            int id = Integer.parseInt(data[0]);
-            String title = data[1];
-            String author = data[2];
-            String section = data[3];
-            int x = Integer.parseInt(data[4]);
-            int y = Integer.parseInt(data[5]);
-            int barcode = Integer.parseInt(data[6]);
-            String description = data[7];
-            boolean onLoan = Boolean.parseBoolean(data[8]);
-
-            return new Book(id, title, author, section, x, y, barcode, description, onLoan);
-        }
-
-
-    }
 }
 
