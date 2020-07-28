@@ -9,7 +9,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception
     {
-        ArrayList<CDModel> cds = CDFactory.createCDModelsFromFile("C:\\Users\\Ryan\\Documents\\Java Repos\\Sample_CD_Archive_Data.txt");
+        String filePath = ".\\Sample_CD_Archive_Data.txt";
+        ArrayList<CDModel> cds = CDFactory.createCDModelsFromFile(filePath);
         SwingUtilities.invokeLater(new Runnable()
         {
             @Override
@@ -31,5 +32,6 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
 
 }
