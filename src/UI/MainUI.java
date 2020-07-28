@@ -6,13 +6,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
-public class MainUI {
+public class MainUI
+{
     private JPanel RootPanel;
     private JLabel WindowTitle;
     private JLabel SearchLbl;
     private JTextField Searchtxtfld;
     private JButton SearchBtn;
-    private JTable ShowTable;
+    private JTable CDTable;
     private JLabel Titlelbl;
     private JLabel AuthorLbl;
     private JLabel Sectionlbl;
@@ -47,11 +48,15 @@ public class MainUI {
     private JButton newItemButton;
     private JButton saveUpdateButton;
 
+    private ArrayList<CDModel> cds;
 
     public MainUI(ArrayList<CDModel> cds)
     {
+        this.cds = cds;
         createTable();
+        assignCdsToTable();
     }
+
 
     public JPanel getRootPanel()
     {
@@ -60,11 +65,23 @@ public class MainUI {
 
     private void createTable()
     {
-        ShowTable.setModel(new DefaultTableModel(
+        CDTable.setModel(new DefaultTableModel(
                 null,
                 new String[]{"Title", "Author", "Section", "X", "Y", "Barcode", "Description", "OnLoan"}
         ));
     }
 
+    private void assignCdsToTable()
+    {
+        DefaultTableModel model = (DefaultTableModel) CDTable.getModel();
+
+        for (CDModel cd : cds)
+        {
+            model.addRow(new Object[]{cd.title, cd.author, cd.section, cd.x, cd.y, cd.barcode, cd.description, cd.onLoan});
+        }
+    }
 }
+
+
+
 
