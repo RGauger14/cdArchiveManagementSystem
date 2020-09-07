@@ -1,4 +1,4 @@
-package com.company;
+package com.Gauger;
 
 public class CDModel {
 
@@ -23,7 +23,6 @@ public class CDModel {
         this.description = description;
         this.onLoan = onLoan;
     }
-
     public int id;
     public String title;
     public String author;

@@ -1,4 +1,4 @@
-package com.company;
+package com.Gauger;
 
 import java.io.BufferedReader;
 import java.io.File;

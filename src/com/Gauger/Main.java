@@ -1,4 +1,4 @@
-package com.company;
+package com.Gauger;
 
 import UI.MainUI;
 
@@ -32,6 +32,4 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
-
-
 }

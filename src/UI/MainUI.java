@@ -1,9 +1,12 @@
 package UI;
 
-import com.company.CDModel;
+import com.Gauger.CDModel;
+import com.Gauger.MyArraySorts;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class MainUI
@@ -47,6 +50,9 @@ public class MainUI
     private JButton displayButton;
     private JButton newItemButton;
     private JButton saveUpdateButton;
+    private JButton byTitleButton;
+    private JButton byAuthorButton;
+    private JButton byBarcodeButton;
 
     private ArrayList<CDModel> cds;
 
@@ -55,8 +61,45 @@ public class MainUI
         this.cds = cds;
         createTable();
         assignCdsToTable();
-    }
+        byTitleButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                MyArraySorts.bubbleSort(cds);
+                clearCdsTable();
+                assignCdsToTable();
+            }
 
+        });
+
+        byAuthorButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                MyArraySorts.insertionSort(cds);
+                clearCdsTable();
+                assignCdsToTable();
+            }
+        });
+        byBarcodeButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                MyArraySorts.selectionSort(cds);
+                clearCdsTable();
+                assignCdsToTable();
+            }
+        });
+    };
+
+    private void clearCdsTable()
+    {
+        DefaultTableModel tableModel = (DefaultTableModel) CDTable.getModel();
+        tableModel.setRowCount(0);
+    }
 
     public JPanel getRootPanel()
     {
