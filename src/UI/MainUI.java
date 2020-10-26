@@ -1,12 +1,17 @@
 package UI;
 
+import com.Gauger.CDFactory;
 import com.Gauger.CDModel;
+import com.Gauger.CDSearch;
 import com.Gauger.MyArraySorts;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class MainUI
@@ -24,7 +29,7 @@ public class MainUI
     private JLabel YLbl;
     private JLabel BarcodeLbl;
     private JLabel descriptionlbl;
-    private JTextField textField1;
+    private JTextField txtTitle;
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
@@ -53,7 +58,6 @@ public class MainUI
     private JButton byTitleButton;
     private JButton byAuthorButton;
     private JButton byBarcodeButton;
-
     private ArrayList<CDModel> cds;
 
     public MainUI(ArrayList<CDModel> cds)
@@ -91,6 +95,26 @@ public class MainUI
                 MyArraySorts.selectionSort(cds);
                 clearCdsTable();
                 assignCdsToTable();
+            }
+        });
+        SearchBtn.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                CDSearch.searchTableContents(CDTable, Searchtxtfld.getText());
+            }
+        });
+        CDTable.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent)
+            {
+                super.mouseClicked(mouseEvent);
+                int i = CDTable.convertRowIndexToModel(CDTable.getSelectedRow());
+                CDFactory cdFactory = (CDFactory) CDTable.getModel();
+
+                txtTitle.setText(CDFactory());
             }
         });
     };
