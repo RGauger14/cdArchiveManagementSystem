@@ -1,9 +1,6 @@
 package UI;
 
-import com.Gauger.CDFactory;
-import com.Gauger.CDModel;
-import com.Gauger.CDSearch;
-import com.Gauger.MyArraySorts;
+import com.Gauger.*;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -46,7 +43,7 @@ public class MainUI
     private JButton reverseOrderSortButton;
     private JButton exitButton;
     private JButton processLogButton;
-    private JTextPane textPane1;
+    private JTextPane ProcessLogTextArea;
     private JButton preOrderButton;
     private JButton inOrderButton;
     private JButton postOrderButton;
@@ -63,6 +60,8 @@ public class MainUI
     private ArrayList<CDModel> cds;
     private int selectedCdId;
 
+    binaryTree bTree = new binaryTree();
+
     public MainUI(ArrayList<CDModel> cds)
     {
         this.cds = cds;
@@ -77,7 +76,11 @@ public class MainUI
                 MyArraySorts.bubbleSort(cds);
                 clearCdsTable();
                 assignCdsToTable();
+                bTree = new binaryTree();
+                values();
+
             }
+
 
         });
 
@@ -145,6 +148,39 @@ public class MainUI
             public void actionPerformed(ActionEvent actionEvent)
             {
                 addNewCd();
+            }
+        });
+        preOrderButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                ProcessLogTextArea.setText("");
+                binaryTree.SB.setLength(0);
+                bTree.preorderTraverseTree(bTree.root);
+                ProcessLogTextArea.setText(String.valueOf(binaryTree.SB));
+            }
+        });
+        inOrderButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                processLogButton.setText("");
+                binaryTree.SB.setLength(0);
+                bTree.inOrderTraverseTree(bTree.root);
+                ProcessLogTextArea.setText(String.valueOf(binaryTree.SB));
+            }
+        });
+        postOrderButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                processLogButton.setText("");
+                binaryTree.SB.setLength(0);
+                bTree.postOrderTraverseTree(bTree.root);
+                ProcessLogTextArea.setText(String.valueOf(binaryTree.SB));
             }
         });
     };
@@ -270,5 +306,13 @@ public class MainUI
         txtBarcode.setText(empty);
         txtDescription.setText(empty);
         checkboxOnLoan.setSelected(false);
+    }
+
+    public void values() {
+        for(int i = 0;1<CDTable.getModel().getRowCount();i++)
+        {
+            bTree.addNode(Integer.parseInt((CDTable.getModel().getValueAt(i,6)).toString()),
+                    CDTable.getModel().getValueAt(i,1).toString());
+        }
     }
 }
