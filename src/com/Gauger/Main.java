@@ -7,11 +7,15 @@ import java.util.ArrayList;
 
 public class Main {
 
+    public static MainUI ui;
+
     public static void main(String[] args) throws Exception
     {
         String filePath = ".\\Sample_CD_Archive_Data.txt";
         ArrayList<CDModel> cds = CDFactory.createCDModelsFromFile(filePath);
-        SwingUtilities.invokeLater(new Runnable()
+
+        // Runs MainUI on a new thread
+        SwingUtilities.invokeAndWait(new Runnable()
         {
             @Override
             public void run()
@@ -19,11 +23,16 @@ public class Main {
                 createGUI(cds);
             }
         });
+
+        // Socket listener runs on main thread with a random free port
+        Server server = new Server(0, ui);
+        server.startServer();
     }
+
 
     private static void createGUI(ArrayList<CDModel> cds)
     {
-        MainUI ui = new MainUI(cds);
+        ui = new MainUI(cds);
         JPanel root = ui.getRootPanel();
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

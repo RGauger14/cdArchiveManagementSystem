@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MainUI
 {
@@ -61,6 +62,7 @@ public class MainUI
     private int selectedCdId;
 
     binaryTree bTree = new binaryTree();
+    private int serverPort;
 
     public MainUI(ArrayList<CDModel> cds)
     {
@@ -76,9 +78,7 @@ public class MainUI
                 MyArraySorts.bubbleSort(cds);
                 clearCdsTable();
                 assignCdsToTable();
-                bTree = new binaryTree();
-                values();
-
+                createBinaryTreeFromTable();
             }
 
 
@@ -181,6 +181,14 @@ public class MainUI
                 binaryTree.SB.setLength(0);
                 bTree.postOrderTraverseTree(bTree.root);
                 ProcessLogTextArea.setText(String.valueOf(binaryTree.SB));
+            }
+        });
+        retrieveButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                createAutomationConsole();
             }
         });
     };
@@ -308,11 +316,50 @@ public class MainUI
         checkboxOnLoan.setSelected(false);
     }
 
+    public void createBinaryTreeFromTable() {
+        bTree = new binaryTree();
+        TableModel tableModel = CDTable.getModel();
+        for(int i = 0; 1 < tableModel.getRowCount(); i++)
+        {
+            String textFieldText = tableModel.getValueAt(i,6).toString();
+            int barcode = Integer.parseInt(textFieldText);
+            String title = tableModel.getValueAt(i,1).toString();
+            bTree.addNode(barcode, title);
+        }
+    }
+
+    public void saveHashSetFromBinaryTree()
+    {
+        HashSet<String> binaryTreeSet = new HashSet<>();
+        // traverse your binary tree with your hash set
+        // and add each node to the hash set
+        // then save the hash set?
+    }
+
+    /*
     public void values() {
         for(int i = 0;1<CDTable.getModel().getRowCount();i++)
         {
             bTree.addNode(Integer.parseInt((CDTable.getModel().getValueAt(i,6)).toString()),
                     CDTable.getModel().getValueAt(i,1).toString());
         }
+    }
+     */
+
+    public void createAutomationConsole()
+    {
+        AutomationConsole ui = new AutomationConsole(serverPort);
+        JPanel root = ui.getRootPanel();
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setContentPane(root);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    public void setServerPort(int serverPort)
+    {
+        this.serverPort = serverPort;
     }
 }
