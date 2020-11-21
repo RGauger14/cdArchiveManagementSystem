@@ -188,7 +188,9 @@ public class MainUI
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                createAutomationConsole();
+                int selectedCDIndex =  getCdIndexById(selectedCdId);
+                CDModel selectedCD = cds.get(selectedCDIndex);
+                createAutomationConsoleWithCD(selectedCD);
             }
         });
     };
@@ -346,16 +348,22 @@ public class MainUI
     }
      */
 
-    public void createAutomationConsole()
+    public void createAutomationConsole(AutomationConsole automationConsole)
     {
-        AutomationConsole ui = new AutomationConsole(serverPort);
-        JPanel root = ui.getRootPanel();
+        JPanel root = automationConsole.getRootPanel();
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setContentPane(root);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+
+    public void createAutomationConsoleWithCD(CDModel selectedCD)
+    {
+        AutomationConsole ui = new AutomationConsole(serverPort, selectedCD);
+        createAutomationConsole(ui);
     }
 
     public void setServerPort(int serverPort)

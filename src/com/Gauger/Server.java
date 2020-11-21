@@ -76,8 +76,8 @@ public class Server
     class ServerClientProcessThread extends Thread
     {
         Socket socket;
-        ObjectInputStream sInput;
-        ObjectOutputStream sOutput;
+        ObjectInputStream serverReadStream;
+        ObjectOutputStream serverWriteStream;
         int id;
 
         ServerClientProcessThread(Socket socket)
@@ -87,8 +87,8 @@ public class Server
             System.out.println("Thread trying to create Object Input/Output Streams");
             try
             {
-                sOutput = new ObjectOutputStream(socket.getOutputStream());
-                sInput = new ObjectInputStream(socket.getInputStream());
+                serverWriteStream = new ObjectOutputStream(socket.getOutputStream());
+                serverReadStream = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e)
             {
                 // TODO
@@ -101,7 +101,19 @@ public class Server
             boolean isClientActive = true;
             while (isClientActive)
             {
-                // TODO - receive and send messages with client
+                try
+                {
+                    AutomationCommand command = (AutomationCommand) serverReadStream.readObject();
+                    AutomationCommandResult commandResult = new AutomationCommandResult(command, "Got cd: " + command.getCdToRetrieve().title);
+                    serverWriteStream.writeObject(commandResult);
+                    System.out.println();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
             }
 
             removeClient(id);
@@ -112,13 +124,13 @@ public class Server
         {
             try
             {
-                if (sOutput != null)
+                if (serverWriteStream != null)
                 {
-                    sOutput.close();
+                    serverWriteStream.close();
                 }
-                if (sInput != null)
+                if (serverReadStream != null)
                 {
-                    sInput.close();
+                    serverReadStream.close();
                 }
                 if (socket != null)
                 {

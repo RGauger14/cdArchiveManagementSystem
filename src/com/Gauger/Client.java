@@ -14,7 +14,6 @@ public class Client
     private AutomationConsole automationConsole;
     private String server;
     private int port;
-    private ClientProcessThread clientProcessThread;
 
     public Client(String server, int port, AutomationConsole automationConsole)
     {
@@ -39,9 +38,6 @@ public class Client
         {
             clientReadStream = new ObjectInputStream(socket.getInputStream());
             clientWriteStream = new ObjectOutputStream(socket.getOutputStream());
-            clientProcessThread = new ClientProcessThread();
-            clientProcessThread.start();
-            clientWriteStream.writeObject("test");
         } catch (IOException eIO)
         {
             disconnect();
@@ -75,29 +71,22 @@ public class Client
         }
     }
 
-    class ClientProcessThread extends Thread
+    public AutomationCommandResult sendRetrieveCommand(CDModel cd)
     {
-
-        public void run()
+        AutomationCommand command = AutomationCommand.Retrieve(cd);
+        try
         {
-            while (true)
-            {
-                try
-                {
-                    String msg = (String) clientReadStream.readObject();
-                } catch (IOException ex)
-                {
-                    if (automationConsole != null)
-                    // eventually creates pop on automation console to say it broke
-                    {
-                        break;
-                    }
-                }
-                catch (ClassNotFoundException ex)
-                {
-                    // TODO - Handle cast exception
-                }
-            }
+            clientWriteStream.writeObject(command);
+            AutomationCommandResult result = (AutomationCommandResult) clientReadStream.readObject();
+            return result;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
         }
+
+        return null;
     }
 }

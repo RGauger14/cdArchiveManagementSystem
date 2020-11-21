@@ -1,6 +1,18 @@
 package com.Gauger;
 
-public class CDModel {
+import java.io.Serializable;
+
+public class CDModel implements Serializable
+{
+    public int id;
+    public String title;
+    public String author;
+    public String section;
+    public int x;
+    public int y;
+    public int barcode;
+    public String description;
+    public boolean onLoan;
 
     public CDModel(
             int id,
@@ -23,15 +35,10 @@ public class CDModel {
         this.description = description;
         this.onLoan = onLoan;
     }
-    public int id;
-    public String title;
-    public String author;
-    public String section;
-    public int x;
-    public int y;
-    public int barcode;
-    public String description;
-    public boolean onLoan;
 
+    public static CDModel CreateTestCD()
+    {
+        return new CDModel(0, "test", "author", "A", 1, 2, 123, "description", true);
+    }
 }
 
