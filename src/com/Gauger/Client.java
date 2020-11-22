@@ -89,4 +89,28 @@ public class Client
 
         return null;
     }
+
+    public AutomationCommandResult sendAddCommand(CDModel cd)
+    {
+        // TODO
+        return null;
+    }
+
+    public AutomationCommandResult sendRemoveCommand(CDModel cd)
+    {
+        // TODO
+        return null;
+    }
+
+    public AutomationCommandResult sendReturnCommand(CDModel cd)
+    {
+        // TODO
+        return null;
+    }
+
+    public AutomationCommandResult sendSortCommand(CDModel cd)
+    {
+        // TODO
+        return null;
+    }
 }

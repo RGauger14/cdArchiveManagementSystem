@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -38,7 +39,7 @@ public class MainUI
     private JButton removeButton;
     private JButton returnButton;
     private JButton addToCollectionButton;
-    private JTextField textField7;
+    private JTextField sortSection;
     private JButton randomCollectionSortButton;
     private JButton mostlyOrderSortButton;
     private JButton reverseOrderSortButton;
@@ -188,12 +189,68 @@ public class MainUI
             @Override
             public void actionPerformed(ActionEvent actionEvent)
             {
-                int selectedCDIndex =  getCdIndexById(selectedCdId);
-                CDModel selectedCD = cds.get(selectedCDIndex);
-                createAutomationConsoleWithCD(selectedCD);
+                CDModel selectedCD = getSelectedCd(cds);
+                createRetrieveAutomationConsole(selectedCD);
             }
         });
-    };
+        addToCollectionButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                CDModel selectedCD = getSelectedCd(cds);
+                createAddAutomationConsole(selectedCD);
+            }
+        });
+        removeButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                CDModel selectedCD = getSelectedCd(cds);
+                createRemoveAutomationConsole(selectedCD);
+            }
+        });
+        returnButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                CDModel selectedCD = getSelectedCd(cds);
+                createReturnAutomationConsole(selectedCD);
+            }
+        });
+        // TODO: Sort buttons for automation console
+        randomCollectionSortButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                String section = sortSection.getText();
+                ArrayList<CDModel> cdsBySection = getCdsBySection(section);
+                createSortAutomationConsole(cdsBySection, section);
+            }
+        });
+    }
+
+    private ArrayList<CDModel> getCdsBySection(String section)
+    {
+        ArrayList cdsBySection = new ArrayList();
+        for (CDModel cd : cds)
+        {
+            if (cd.section.equalsIgnoreCase(section))
+            {
+                cdsBySection.add(cd);
+            }
+        }
+        return cdsBySection;
+    }
+
+    private CDModel getSelectedCd(ArrayList<CDModel> cds)
+    {
+        int selectedCDIndex =  getCdIndexById(selectedCdId);
+        return cds.get(selectedCDIndex);
+    }
 
     private void clearCdsTable()
     {
@@ -360,9 +417,33 @@ public class MainUI
     }
 
 
-    public void createAutomationConsoleWithCD(CDModel selectedCD)
+    public void createRetrieveAutomationConsole(CDModel selectedCD)
     {
-        AutomationConsole ui = new AutomationConsole(serverPort, selectedCD);
+        AutomationConsole ui = AutomationConsole.createRetrieveAutomationConsole(serverPort, selectedCD);
+        createAutomationConsole(ui);
+    }
+
+    public void createReturnAutomationConsole(CDModel selectedCD)
+    {
+        AutomationConsole ui = AutomationConsole.createReturnAutomationConsole(serverPort, selectedCD);
+        createAutomationConsole(ui);
+    }
+
+    public void createRemoveAutomationConsole(CDModel selectedCD)
+    {
+        AutomationConsole ui = AutomationConsole.createRemoveAutomationConsole(serverPort, selectedCD);
+        createAutomationConsole(ui);
+    }
+
+    public void createAddAutomationConsole(CDModel selectedCD)
+    {
+        AutomationConsole ui = AutomationConsole.createAddAutomationConsole(serverPort, selectedCD);
+        createAutomationConsole(ui);
+    }
+
+    private void createSortAutomationConsole(ArrayList<CDModel> cdsBySection, String section)
+    {
+        AutomationConsole ui = AutomationConsole.createSortAutomationConsole(serverPort, section, cdsBySection);
         createAutomationConsole(ui);
     }
 
