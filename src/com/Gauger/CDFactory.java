@@ -5,7 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+
 public class CDFactory {
+    /**
+     *
+     * @param filePath This will read the textfile in and create a CDModel from the txtfile
+     * @return
+     * @throws Exception
+     */
     public static ArrayList<CDModel> createCDModelsFromFile(String filePath) throws Exception
     {
         File file = new File(filePath);
@@ -23,6 +30,11 @@ public class CDFactory {
         return cds;
     }
 
+    /**
+     *
+     * @param data this will create a CD from the CDmodel that has been created from the text file.
+     * @return
+     */
     private static CDModel createCD(String[] data)
     {
         int id = Integer.parseInt(data[0]);

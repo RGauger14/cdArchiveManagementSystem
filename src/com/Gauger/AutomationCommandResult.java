@@ -7,10 +7,10 @@ public class AutomationCommandResult implements Serializable
     public AutomationCommand command;
     public String message;
 
-    public AutomationCommandResult(AutomationCommand command, String result)
+    public AutomationCommandResult(AutomationCommand command, String message)
     {
         this.command = command;
-        this.message = result;
+        this.message = message;
     }
 
 }

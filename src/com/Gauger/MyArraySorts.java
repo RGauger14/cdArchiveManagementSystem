@@ -5,6 +5,10 @@ import java.util.ArrayList;
 
 public class MyArraySorts
 {
+    /**
+     *
+     * @param cds This will perform a bubble sort for the CDs that have been read in via the text files
+     */
     public static void bubbleSort(ArrayList<CDModel> cds)
     {
         int i;
@@ -32,6 +36,11 @@ public class MyArraySorts
         }
     }
 
+    /**
+     *
+     * @param cds This will perform a insertion sort for the CDs that have been read in via the text files
+     */
+
     public static void insertionSort(ArrayList<CDModel> cds)
     {
         {
@@ -50,6 +59,11 @@ public class MyArraySorts
             }
         }
     }
+
+    /**
+     *
+     * @param cds This will perform a Selection sort for the CDs that have been read in via the text files
+     */
 
     public static void selectionSort(ArrayList<CDModel> cds)
     {

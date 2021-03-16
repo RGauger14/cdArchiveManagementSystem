@@ -92,25 +92,77 @@ public class Client
 
     public AutomationCommandResult sendAddCommand(CDModel cd)
     {
-        // TODO
+        AutomationCommand command = AutomationCommand.Add(cd);
+        try
+        {
+            clientWriteStream.writeObject(command);
+            AutomationCommandResult result = (AutomationCommandResult) clientReadStream.readObject();
+            return result;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     public AutomationCommandResult sendRemoveCommand(CDModel cd)
     {
-        // TODO
+        AutomationCommand command = AutomationCommand.Remove(cd);
+        try
+        {
+            clientWriteStream.writeObject(command);
+            AutomationCommandResult result = (AutomationCommandResult) clientReadStream.readObject();
+            return result;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     public AutomationCommandResult sendReturnCommand(CDModel cd)
     {
-        // TODO
+        AutomationCommand command = AutomationCommand.Return(cd);
+        try
+        {
+            clientWriteStream.writeObject(command);
+            AutomationCommandResult result = (AutomationCommandResult) clientReadStream.readObject();
+            return result;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
-    public AutomationCommandResult sendSortCommand(CDModel cd)
+    public AutomationCommandResult sendSortCommand(String sortSection)
     {
-        // TODO
+        AutomationCommand command = AutomationCommand.Sort(sortSection);
+        try
+        {
+            clientWriteStream.writeObject(command);
+            AutomationCommandResult result = (AutomationCommandResult) clientReadStream.readObject();
+            return result;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

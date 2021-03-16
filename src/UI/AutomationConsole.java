@@ -7,8 +7,10 @@ import com.Gauger.Client;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class AutomationConsole extends JFrame
@@ -35,7 +37,65 @@ public class AutomationConsole extends JFrame
         this.serverPort = serverPort;
         portLabel.setText(Integer.toString(serverPort));
         createClient();
-        processButton.addActionListener(createRequestActionListener());
+        JFrame jframe = this;
+        Component component = this;
+        ExitButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                jframe.dispose();
+            }
+        });
+        addItemButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                JOptionPane.showMessageDialog(component, "The CD has been sent to the robotic ARM to add.");
+                AutomationCommandResult result = client.sendAddCommand(cd);
+                processResult(result);
+            }
+        });
+        processButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                AutomationCommandResult result = null;
+                switch ((String) RequestActionComboBox.getSelectedItem())
+                {
+                    case "Retrieve":
+                        JOptionPane.showMessageDialog(component, "The CD has been sent to the robotic ARM to retrieve.");
+                        result = client.sendRetrieveCommand(cd);
+                        break;
+                    case "Add":
+                        JOptionPane.showMessageDialog(component, "The CD has been sent to the robotic ARM to add.");
+                        result = client.sendAddCommand(cd);
+                        break;
+                    case "Return":
+                        JOptionPane.showMessageDialog(component, "The CD has been sent to the robotic ARM to return.");
+                        result = client.sendReturnCommand(cd);
+                        break;
+                    case "Remove":
+                        JOptionPane.showMessageDialog(component, "The CD has been sent to the robotic ARM to remove.");
+                        result = client.sendRemoveCommand(cd);
+                        break;
+                    case "Sort":
+                        JOptionPane.showMessageDialog(component, "The CDs have been sent to the robotic ARM to sort.");
+                        result = client.sendSortCommand(sectionTextBox.getText());
+                        break;
+                    default:
+                }
+
+                if (result == null)
+                {
+                    // Handle error processing command
+                }
+
+                processResult(result);
+            }
+        });
     }
 
     private AutomationConsole(int serverPort, CDModel cd)
@@ -77,7 +137,6 @@ public class AutomationConsole extends JFrame
 
     public static AutomationConsole createSortAutomationConsole(int serverPort, String section, ArrayList<CDModel> cds)
     {
-        // TODO: Add logic that uses the section?
         AutomationConsole console = new AutomationConsole(serverPort, cds);
         console.setActionTo("Sort");
         return console;
@@ -120,10 +179,7 @@ public class AutomationConsole extends JFrame
 
     private void processResult(AutomationCommandResult result)
     {
-        if (result.command.getCommandType() == AutomationCommand.CommandType.Retrieve)
-        {
-            JOptionPane.showMessageDialog(this, result.message);
-        }
+        JOptionPane.showMessageDialog(this, result.message);
     }
 
     private void createClient()
@@ -135,43 +191,5 @@ public class AutomationConsole extends JFrame
     public JPanel getRootPanel()
     {
         return root;
-    }
-
-    public ActionListener createRequestActionListener()
-    {
-        return new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent)
-            {
-                AutomationCommandResult result = null;
-                switch ((String) RequestActionComboBox.getSelectedItem())
-                {
-                    case "Retrieve":
-                        result = client.sendRetrieveCommand(cd);
-                        break;
-                    case "Add":
-                        result = client.sendAddCommand(cd);
-                        break;
-                    case "Return":
-                        result = client.sendReturnCommand(cd);
-                        break;
-                    case "Remove":
-                        result = client.sendRemoveCommand(cd);
-                        break;
-                    case "Sort":
-                        result = client.sendSortCommand(cd);
-                        break;
-                    default:
-                }
-
-                if (result == null)
-                {
-                    // Handle error processing command
-                }
-
-                processResult(result);
-            }
-        };
     }
 }

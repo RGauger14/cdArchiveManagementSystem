@@ -5,15 +5,19 @@ import com.Gauger.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 
-public class MainUI
+public class MainUI extends JFrame
 {
     private JPanel RootPanel;
     private JLabel WindowTitle;
@@ -64,6 +68,8 @@ public class MainUI
 
     binaryTree bTree = new binaryTree();
     private int serverPort;
+
+    private HashSet<String> processLogHashSet = new HashSet<>();
 
     public MainUI(ArrayList<CDModel> cds)
     {
@@ -191,6 +197,8 @@ public class MainUI
             {
                 CDModel selectedCD = getSelectedCd(cds);
                 createRetrieveAutomationConsole(selectedCD);
+                String log = getProcessLogFromString("Retrieve CD", selectedCD.barcode);
+                addToProcessLog(log);
             }
         });
         addToCollectionButton.addActionListener(new ActionListener()
@@ -200,6 +208,8 @@ public class MainUI
             {
                 CDModel selectedCD = getSelectedCd(cds);
                 createAddAutomationConsole(selectedCD);
+                String log = getProcessLogFromString("Add CD", selectedCD.barcode);
+                addToProcessLog(log);
             }
         });
         removeButton.addActionListener(new ActionListener()
@@ -209,6 +219,8 @@ public class MainUI
             {
                 CDModel selectedCD = getSelectedCd(cds);
                 createRemoveAutomationConsole(selectedCD);
+                String log = getProcessLogFromString("Remove CD", selectedCD.barcode);
+                addToProcessLog(log);
             }
         });
         returnButton.addActionListener(new ActionListener()
@@ -218,9 +230,10 @@ public class MainUI
             {
                 CDModel selectedCD = getSelectedCd(cds);
                 createReturnAutomationConsole(selectedCD);
+                String log = getProcessLogFromString("Return CD", selectedCD.barcode);
+                addToProcessLog(log);
             }
         });
-        // TODO: Sort buttons for automation console
         randomCollectionSortButton.addActionListener(new ActionListener()
         {
             @Override
@@ -229,6 +242,43 @@ public class MainUI
                 String section = sortSection.getText();
                 ArrayList<CDModel> cdsBySection = getCdsBySection(section);
                 createSortAutomationConsole(cdsBySection, section);
+                String log = getProcessLogFromString("Randomly sort CDs", -1);
+                addToProcessLog(log);
+            }
+        });
+        mostlyOrderSortButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                String section = sortSection.getText();
+                ArrayList<CDModel> cdsBySection = getCdsBySection(section);
+                createSortAutomationConsole(cdsBySection, section);
+                String log = getProcessLogFromString("Mostly sort CDs", -1);
+                addToProcessLog(log);
+            }
+        });
+        reverseOrderSortButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                String section = sortSection.getText();
+                ArrayList<CDModel> cdsBySection = getCdsBySection(section);
+                createSortAutomationConsole(cdsBySection, section);
+                String log = getProcessLogFromString("Reverse sort CDs", -1);
+                addToProcessLog(log);
+            }
+        });
+
+        Component component = this;
+        saveButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent)
+            {
+                saveProcessLogHashSet();
+                JOptionPane.showMessageDialog(component, "The process log has been saved to process.log");
             }
         });
     }
@@ -387,12 +437,23 @@ public class MainUI
         }
     }
 
-    public void saveHashSetFromBinaryTree()
+    public void saveProcessLogHashSet()
     {
-        HashSet<String> binaryTreeSet = new HashSet<>();
-        // traverse your binary tree with your hash set
-        // and add each node to the hash set
-        // then save the hash set?
+        FileWriter fileWriter = null;
+        try
+        {
+            fileWriter = new FileWriter("process.log");
+            for (String log : processLogHashSet)
+            {
+                fileWriter.write(log);
+                fileWriter.write("\n");
+            }
+
+            fileWriter.close();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -450,5 +511,45 @@ public class MainUI
     public void setServerPort(int serverPort)
     {
         this.serverPort = serverPort;
+    }
+
+    public void addToProcessLog(AutomationCommand command)
+    {
+        String processLogText = getProcessLogTextFromCommand(command);
+        addToProcessLog(processLogText);
+    }
+
+    public void addToProcessLog(String log)
+    {
+        processLogHashSet.add(log);
+        StringBuilder sb = new StringBuilder();
+        String currentProcessLogText = ProcessLogTextArea.getText();
+        sb.append(currentProcessLogText);
+        sb.append("\n" + log);
+        ProcessLogTextArea.setText(sb.toString());
+    }
+
+    public String getProcessLogFromString(String sendCommandType, int barcode)
+    {
+        String date = new SimpleDateFormat("dd/MM/yyyy - hh:mm a").format(new Date());
+        String text = date + " - SENT - " + sendCommandType;
+        if (barcode != -1)
+        {
+            text += " - " + barcode;
+        }
+        return text;
+    }
+
+
+    private String getProcessLogTextFromCommand(AutomationCommand command)
+    {
+        String date = new SimpleDateFormat("dd/MM/yyyy - hh:mm a").format(new Date());
+        String commandTypeText = command.getCommandTypeText();
+        String text = date + " - RCVD - " + commandTypeText;
+        if (command.getCommandType() != AutomationCommand.CommandType.Sort)
+        {
+            text += " - " + command.getCd().barcode;
+        }
+        return text;
     }
 }
